@@ -17,8 +17,8 @@ polygon1 = Polygon([(total_extent[0], total_extent[1]), (midpoint_x, total_exten
 polygon2 = Polygon([(midpoint_x, total_extent[1]), (total_extent[2], total_extent[1]), (total_extent[2], total_extent[3]), (midpoint_x, total_extent[3])])
 
 # Filtrar os dados do shp
-parte1 = gdf[gdf.geometry.intersects(polygon1)]
-parte2 = gdf[gdf.geometry.intersects(polygon2)]
+parte1 = gdf[gdf.geometry.split(polygon1)]
+parte2 = gdf[gdf.geometry.split(polygon2)]
 
 # guardar
 parte1.to_file('parte1.shp')
