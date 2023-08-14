@@ -1,2 +1,2 @@
 # Divisao-de-um-Poligono-py
-Script que permita a divisao de um poligono
+Script que permite a divisao de um poligono em duas partes iguais
