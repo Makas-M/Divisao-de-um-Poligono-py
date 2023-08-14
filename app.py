@@ -1,25 +1,25 @@
-import fiona
-from shapely.geometry import Polygon, mapping
-import matplotlib.pyplot as plt
-from descartes import PolygonPatch
 import geopandas as gpd
+from shapely.geometry import Polygon
 
 
-polyShp = fiona.open('./poligono/poligono.shp')
+shapefile_path = 'poligono/poligono.shp'
+gdf = gpd.read_file(shapefile_path)
 
-# Suponha que o shapefile contenha apenas um polígono
-# polyShp = gdf['geometry'][0]
+# Calcular a area total do shp
+total_extent = gdf.total_bounds
 
-# Dividir o polígono em 4 partes iguais
-subpoligonos = polyShp.divide(4)
-# mostrar lista de coordenadas do poligonos
-polyList = []
-polyProperties = []
+# Calcular o ponto medio
+midpoint_x = (total_extent[0] + total_extent[2]) / 2
+midpoint_y = (total_extent[1] + total_extent[3]) / 2
 
-for poly in polyShp:
-    polyGeom = Polygon(poly['geometry']['coordinates'][0])
-    polyList.append(polyGeom)
-    polyProperties.append(poly['properties'])
+# Criar dois polígonos
+polygon1 = Polygon([(total_extent[0], total_extent[1]), (midpoint_x, total_extent[1]), (midpoint_x, total_extent[3]), (total_extent[0], total_extent[3])])
+polygon2 = Polygon([(midpoint_x, total_extent[1]), (total_extent[2], total_extent[1]), (total_extent[2], total_extent[3]), (midpoint_x, total_extent[3])])
 
-print(polyList[0])
-print(polyProperties[0])
+# Filtrar os dados do shp
+parte1 = gdf[gdf.geometry.intersects(polygon1)]
+parte2 = gdf[gdf.geometry.intersects(polygon2)]
+
+# guardar
+parte1.to_file('parte1.shp')
+parte2.to_file('parte2.shp')
